@@ -41,7 +41,3 @@ def expire(address):
     for line in output:
         if address in line:
             os.system('iptables -D INPUT ' + line.split(' ')[0])
-
-
-def function():
-    pass
