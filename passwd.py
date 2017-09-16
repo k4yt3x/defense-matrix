@@ -1,4 +1,8 @@
+#!/usr/bin/python3
 import re
+import subprocess
+import getpass
+
 
 # class PasswdCheck(object):
 #  def checkPasswdComplexity(self, passwd):
@@ -6,6 +10,19 @@ import re
 #    cout = subprocess.check_output(cmd, shell=True).decode()
 #    coutparsed = cout[cout.index(":")+2:-1]
 #    return coutparsed
+
+
+def replaceOriginalPasswd():
+    import os
+    if os.rename("/usr/bin/passwd", "/usr/bin/oldpasswd") != 0:
+        return False
+    os.system("ln -s /usr/bin/passwd /usr/share/DefenseMatrix/passwd")
+
+
+def changePassword(username, password):
+    output = subprocess.Popen(('mkpasswd', '-m', 'sha-512', password), stdout=subprocess.PIPE)
+    shadow_password = output.communicate()[0].strip()
+    subprocess.call(('usermod', '-p', shadow_password, username))
 
 
 class passwdCheck(object):
@@ -42,3 +59,21 @@ class passwdCheck(object):
             return self.AT_LEAST_SPEC
         else:
             return True
+
+
+if __name__ == '__main__':
+    for _ in range(3):
+        passwd = getpass.getpass("Enter new UNIX password:")
+        repasswd = getpass.getpass("Retype new UNIX password:")
+        if passwd != repasswd:
+            print("Sorry, passwords do not match")
+        else:
+            p = passwdCheck()
+            checkres = p.checkPasswdComplexity(passwd)
+            if checkres is not True:
+                print(checkres)
+            else:
+                changePassword(getpass.getuser(), passwd)
+                print("passwd: password updated successfully")
+                exit(0)
+    print("passwd: Authentication token manipulation error\npasswd: password unchanged")
