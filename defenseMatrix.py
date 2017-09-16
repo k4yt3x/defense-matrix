@@ -87,11 +87,11 @@ def installWizard():
             avalon.error("Invalid Input!")
 
     if serverType == "Web Server":
-        portsOpen = [22, 80, 443]
+        portsOpen = [80, 443]
     elif serverType == "Mail Server":
-        portsOpen = [22, 25, 587, 110]
+        portsOpen = [25, 587, 110]
     elif serverType == "Minecraft PC Server":
-        portsOpen = [22, 25565]
+        portsOpen = [25565]
 
     ifacesSelected = []
     while True:
@@ -138,13 +138,33 @@ def installWizard():
     if not avalon.ask("Is is okay to proceed right now?", True):
         exit(0)
 
-    ifaceobjs = []
+    ifaceobjs_iptables = []
+    ifaceobjs_arptables = []
 
-    for interface in interfaces:
-        interface = interface_ctrl(interface)
-        ifaceobjs.append(interface)
+    for interface in ifacesSelected:
+        iptablesobj = iptables(interface)
+        ifaceobjs_iptables.append(iptablesobj)
+        arptablesobj = arptables(interface)
+        ifaceobjs_arptables.append(arptablesobj)
 
-    for iface in ifaceobje
+    for iface in ifaceobjs_iptables:
+        for port in portsOpen:
+            iface.allow(port)
+
+    avalon.info("It is " + avalon.FM.BD + "HIGHLY recommended to change your default port for ssh")
+    if avalon.ask("Do you want to change it right now?", True):
+        while True:
+            port = avalon.gets("Which port do you want to change to?")
+            if len(port) != 0:
+                try:
+                    port = int(port)
+                    break
+                except TypeError:
+                    avalon.error("Please enter a valid port number between 1-65565!")
+            else:
+                avalon.error("Please enter a valid port number between 1-65565!")
+    else:
+        avalon.info("You can always change it using the command \"dm --ssh-port [port]\"")
 
 
 # -------------------------------- Procedural --------------------------------

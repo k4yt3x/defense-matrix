@@ -17,7 +17,7 @@ class iptables:
                 return True
         return False
 
-    def allow(self, address, port):
+    def allow(self, port):
         """
         Accept all traffic from one address
 
@@ -25,7 +25,7 @@ class iptables:
             address {string} -- Address of target machine
             port {int} -- Port number
         """
-        os.system("iptables -A INPUT -i " + self.interface + " -p tcp --source " + address + " --sport " + str(port) + " -j ACCEPT")
+        os.system("iptables -A INPUT -i " + self.interface + " -p tcp --sport " + str(port) + " -j ACCEPT")
 
     def expire(self, address):
         """
