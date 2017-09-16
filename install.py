@@ -8,7 +8,7 @@ Customizability (things to input) to this class are:
     network adapter = name (as listed under ifconfig), ALL is default
 
 '''
-
+from iptables import ufw
 import inspect
 import os
 import sys
@@ -76,7 +76,6 @@ class Install:
 
         def network_manager():
 
-
         # check arptables installation
         if not (os.path.isfile('/usr/bin/arptables')
                 or os.path.isfile('/usr/sbin/arptables')):
@@ -116,3 +115,83 @@ class Install:
         if remove:
             return uninstall()
 
+
+def setSSHPort(port):
+    SSHD_CONFIG = '/etc/ssh/sshd_config'
+    TEMP = '/tmp/sshd_config'
+    with open(TEMP, 'w') as temp:
+        with open(SSHD_CONFIG, 'r') as sshd:
+            for line in sshd:
+                if line[0:5] != 'Port ':
+                    temp.write(line)
+            temp.write('Port ' + str(port) + '\n')
+    shutil.move(TEMP, SSHD_CONFIG)
+
+
+def installWizard():
+    print(avalon.FG.G + avalon.FM.BD + "Welcome to DefenseMatrix!")
+    print("This is the setup wizard")
+    print("You will be asked to answer basic questions about your server" + avalon.FM.RST)
+
+    serverTypes = [
+    "Web Server",
+    "Mail Server",
+    "Minecraft PC Server",
+    ]
+    print(serverTypes[0])
+
+    for index in range(len(serverTypes)):
+        print(str(index) + ". " + serverTypes[index])
+
+    while True:
+        serverSelection = avalon.gets("Which type of server it this?: ")
+        try:
+            serverType = serverTypes[int(serverSelection)]
+            break
+        except TypeError:
+            avalon.error("Invalid Input!")
+
+    if serverType == "Web Server":
+        portsOpen = [80, 443]
+    elif serverType == "Mail Server":
+        portsOpen = [25, 587, 110]
+    elif serverType == "Minecraft PC Server":
+        portsOpen = [25565]
+
+    avalon.info("DefenseMatrix takes care of your firewall settings for you")
+    avalon.warning("This following step is going to reset your iptables configuration")
+    if not avalon.ask("Is is okay to proceed right now?", True):
+        exit(0)
+
+    os.system("iptables -F")
+    os.system("iptables -X")
+
+    ufwctrl = iptables.ufw()
+
+    sshSet = False
+    avalon.info("It is " + avalon.FM.BD + "HIGHLY recommended to change your default port for ssh")
+    if avalon.ask("Do you want to change it right now?", True):
+        while True:
+            sshport = avalon.gets("Which port do you want to change to?")
+            if len(sshport) != 0:
+                try:
+                    sshport = int(sshport)
+                    setSSHPort(sshport)
+                    sshSet = True
+                    avalon.info("SSH Port successfully set to " + str(sshport))
+                    avalon.info("Effective after setup wizard is completed")
+                    break
+                except TypeError:
+                    avalon.error("Please enter a valid port number between 1-65565!")
+            else:
+                avalon.error("Please enter a valid port number between 1-65565!")
+    else:
+        avalon.info("You can always change it using the command \"dm --ssh-port [port]\"")
+
+    if sshSet:
+        ufwctrl.allow(sshport)
+    else:
+        ufwctrl.allow(22)
+    avalon.info("Installation Wizard Completed!")
+    avalon.info("Settings will be effective immediately!")
+    os.system("service ssh restart")
