@@ -4,6 +4,7 @@ import sys
 import avalon_framework as av
 import settings as st
 
+
 class Install:
     def __init__(self, install_location='/usr/share/'):
         self.install_location = install_location
@@ -41,7 +42,7 @@ class Install:
         pass
 
     def _install_arptables(self):
-        def uninstall (self):
+        def uninstall(self):
             os.system(st.gen_pack_remove(st.package_manager, 'arptables'))
 
         # check arptables installation
@@ -58,7 +59,7 @@ class Install:
         self._installed[inspect.stack()[0][3].rsplit('_', 1)[-1]] = True
 
 
-    def _install_rkhunt(self):
+    def install_rkhunt(self):
         pass
 
     def _install_tripwire(self):
@@ -69,5 +70,4 @@ class Install:
 
     def _install_config(self):
         pass
-
 
