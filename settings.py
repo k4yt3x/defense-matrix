@@ -1,14 +1,24 @@
 #!/usr/bin/python3
 
 import os
-import sys
 
+# ------global variables------
+
+# filepaths
 CONFPATH = '/etc/DefenseMatrix.conf'
-files = []
+INSTALLPATH = '/usr/share/defenseMatrix/'
+SSHD_CONFIG = '/etc/ssh/sshd_config'
+
+# configuration variables
 packages = []
+server_types = {
+    "Web Server": [80, 443],
+    "Mail Server": [25, 587, 110],
+    "Minecraft PC Server": [25565]
+}
 
 
-def write_file (data, filename, mode='wb'):
+def write_file(data, filename, mode='wb'):
     if not os.path.exists(filename):
         os.system('touch %s' % filename)
     with open(filename, mode) as fname:

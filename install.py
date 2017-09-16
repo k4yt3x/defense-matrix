@@ -8,6 +8,7 @@ Customizability (things to input) to this class are:
     network adapter = name (as listed under ifconfig), ALL is default
 
 '''
+import avalon_framework as avalon
 from iptables import ufw
 import inspect
 import os
@@ -16,50 +17,87 @@ import settings as st
 
 
 class Install:
-    def __init__(self, install_location='/usr/share/'):
-        self.install_location = install_location.rstrip('/', 1) + '/DefenseMatrix'
-
-        os.system('mkdir -p %s' % self.install_location)
-        os.system('cp -r %s/* %s/' % (os.cwd(), self.install_location))
-        os.system('ln -s %s/defenceMatrix.py /usr/bin/defencematrix' % self.install_location)
-
-        self._installed = {
-            'iptables': False,
-            'arptables': False,
-            'rkhunt': False,
-            'tripwire': False,
-            'passwdcmplx': False,
-            'config': False
-        }
-
-    def install(self):
-        # run all the required installations
-        # TODO: allow user to choose which parts they want installed
-        self._install_iptables()
-        self._install_arptables()
-        self._install_rkhunt()
-        self._install_tripwire()
-        self._install_passwdcmplx()
-        self._install_config()
-
-    # to uninstall just read the list of all installed packages and
-    # crated files, and remove them.
-    def uninstall(self):
-        for method in self._installed.keys():
-            # if self._installed[method]:
-            exec('self._install_%s(remove=True)' % method)
-
-        sys.exit(0)
-        exit(0)
+    def __init__(self):
+        # copy self to installation directory upon initialization
+        os.system('mkdir -p %s' % st.INSTALLPATH)
+        os.system('cp -r %s/* %s' % (os.getcwd(), st.INSTALLPATH))
+        os.system('ln -s %s/defenceMatrix.py /usr/bin/defencematrix'
+                  % st.INSTALLPATH)
 
     def check_install(self):
         return os.path.exists(st.CONFPATH)
 
-    def _install_iptables(self, remove=False):
-        def uninstall():
-            pass
-        if remove:
-            return uninstall()
+    def install(self):
+        # check if we're already installed
+        if self.check_install():
+            print('DefenseMatrix is already installed.')
+            return
+        open_ports, ssh_port = self._get_inputs()
+        self._install_iptables(open_ports + [ssh_port])
+        self._install_arptables()
+        self._install_rkhunt()
+        self._install_passwdcmplx()
+        self._install_config(ssh_port)
+
+        avalon.info("Installation Wizard Completed!")
+        avalon.info("Settings will be effective immediately!")
+
+    # to uninstall just read the list of all installed packages and
+    # crated files, and remove them.
+    # (i.e. anything at st.CONFPATH, st.INSTALLPATH, and the st.packages list)
+    def uninstall(self):
+        sys.exit(0)
+        exit(0)
+
+    def _get_inputs(self):
+        # welcome and banner
+        print(avalon.FG.G + avalon.FM.BD + "Welcome to DefenseMatrix!")
+        print("This is the setup wizard")
+        print("You will be asked to answer basic questions about your server" + avalon.FM.RST)
+
+        for index, server_type in enumerate(st.server_types):
+            print('%d.  %s' % (index, server_type))
+
+        while True:
+            server_select = avalon.gets("Select your type of server: ")
+            try:
+                server_type = list(st.server_types.keys())[int(server_select)]
+                break
+            except TypeError:
+                avalon.error("Invalid Input!")
+
+        for server in st.server_types.keys():
+            open_ports = st.server_types[server]
+
+        avalon.info("DefenseMatrix takes care of your firewall settings for you.")
+        avalon.warning("This following step is going to reset your iptables configuration")
+        if not avalon.ask("Is is okay to proceed?", True):
+            exit(0)
+
+        os.system("iptables -F")
+        os.system("iptables -X")
+
+        ssh_port = 22
+        avalon.info("It is " + avalon.FM.BD + "HIGHLY recommended to change your default port for ssh")
+        if avalon.ask("Do you want to change it now?", True):
+            while True:
+                try:
+                    ssh_port = int(avalon.gets("Which port do you want to change to?"))
+                    if int(ssh_port) <= 0:
+                        raise TypeError
+                    else:
+                        break
+                except TypeError:
+                    avalon.error("Please enter a valid port number between 1-65565!")
+        else:
+            avalon.info("You can always change it using the command \"dm --ssh-port [port]\"")
+
+        return open_ports, ssh_port
+
+    def _install_iptables(self, open_ports):
+        ufwctrl = ufw()
+        for port in open_ports:
+            ufw.allow(port)
 
     def _install_arptables(self, network_managers='all', remove=False):
         def uninstall():
@@ -67,133 +105,32 @@ class Install:
         if remove:
             return uninstall()
 
-        def wicd():
-            # if wicd is not installed, ask to install
-            if not os.path.isdir('/etc/wicd'):
-                if av.ask('WICD not installed, install?', True):
-                    if not os.system(st.gen_pack_install(st.package_manager, 'wicd')):
-                        abort
-
-        def network_manager():
-
         # check arptables installation
         if not (os.path.isfile('/usr/bin/arptables')
                 or os.path.isfile('/usr/sbin/arptables')):
             if os.system(st.gen_pack_install(st.package_manager, 'arptables')):
                 print('Invalid package manager. Unable to proceed. ')
         else:
-            av.error('arptables not installed. Unable to proceed. ' +
-                     'Aborting...')
+            avalon.error('arptables not installed. Unable to proceed. ' +
+                         'Aborting...')
             uninstall()
 
-
-
         # retrieve method name and set its respective value in _installed
-        self._installed[inspect.stack()[0][3].rsplit('_', 1)[-1]] = True
+        # self._installed[inspect.stack()[0][3].rsplit('_', 1)[-1]] = True
 
-    def _install_rkhunt(self, remove=False):
-        def uninstall():
-            pass
-        if remove:
-            return uninstall()
+    def _install_rkhunt(self):
+        pass
 
-    def _install_tripwire(self, remove=False):
-        def uninstall():
-            pass
-        if remove:
-            return uninstall()
+    def _install_passwdcmplx(self):
+        pass
 
-    def _install_passwdcmplx(self, remove=False):
-        def uninstall():
-            pass
-        if remove:
-            return uninstall()
+    def _install_config(self, ssh_port):
+        # generate ssh port configuration
+        sshd_config = [line for line in st.read_file(st.SSHD_CONFIG)
+                       if line[0:5] != 'Port ']
+        print(sshd_config)
+        sshd_config.append('Port %s\n' % str(ssh_port))
+        st.write_file('\n'.join(sshd_config), st.SSHD_CONFIG, mode='w')
+        avalon.info("SSH Port successfully set to " + str(ssh_port))
+        os.system("service ssh restart")
 
-    def _install_config(self, remove=False):
-        def uninstall():
-            pass
-        if remove:
-            return uninstall()
-
-
-def setSSHPort(port):
-    SSHD_CONFIG = '/etc/ssh/sshd_config'
-    TEMP = '/tmp/sshd_config'
-    with open(TEMP, 'w') as temp:
-        with open(SSHD_CONFIG, 'r') as sshd:
-            for line in sshd:
-                if line[0:5] != 'Port ':
-                    temp.write(line)
-            temp.write('Port ' + str(port) + '\n')
-    shutil.move(TEMP, SSHD_CONFIG)
-
-
-def installWizard():
-    print(avalon.FG.G + avalon.FM.BD + "Welcome to DefenseMatrix!")
-    print("This is the setup wizard")
-    print("You will be asked to answer basic questions about your server" + avalon.FM.RST)
-
-    serverTypes = [
-    "Web Server",
-    "Mail Server",
-    "Minecraft PC Server",
-    ]
-    print(serverTypes[0])
-
-    for index in range(len(serverTypes)):
-        print(str(index) + ". " + serverTypes[index])
-
-    while True:
-        serverSelection = avalon.gets("Which type of server it this?: ")
-        try:
-            serverType = serverTypes[int(serverSelection)]
-            break
-        except TypeError:
-            avalon.error("Invalid Input!")
-
-    if serverType == "Web Server":
-        portsOpen = [80, 443]
-    elif serverType == "Mail Server":
-        portsOpen = [25, 587, 110]
-    elif serverType == "Minecraft PC Server":
-        portsOpen = [25565]
-
-    avalon.info("DefenseMatrix takes care of your firewall settings for you")
-    avalon.warning("This following step is going to reset your iptables configuration")
-    if not avalon.ask("Is is okay to proceed right now?", True):
-        exit(0)
-
-    os.system("iptables -F")
-    os.system("iptables -X")
-
-    ufwctrl = iptables.ufw()
-    for port in portsOpen:
-        ufwctrl.allow(port)
-
-    sshSet = False
-    avalon.info("It is " + avalon.FM.BD + "HIGHLY recommended to change your default port for ssh")
-    if avalon.ask("Do you want to change it right now?", True):
-        while True:
-            sshport = avalon.gets("Which port do you want to change to?")
-            if len(sshport) != 0:
-                try:
-                    sshport = int(sshport)
-                    setSSHPort(sshport)
-                    sshSet = True
-                    avalon.info("SSH Port successfully set to " + str(sshport))
-                    avalon.info("Effective after setup wizard is completed")
-                    break
-                except TypeError:
-                    avalon.error("Please enter a valid port number between 1-65565!")
-            else:
-                avalon.error("Please enter a valid port number between 1-65565!")
-    else:
-        avalon.info("You can always change it using the command \"dm --ssh-port [port]\"")
-
-    if sshSet:
-        ufwctrl.allow(sshport)
-    else:
-        ufwctrl.allow(22)
-    avalon.info("Installation Wizard Completed!")
-    avalon.info("Settings will be effective immediately!")
-    os.system("service ssh restart")
