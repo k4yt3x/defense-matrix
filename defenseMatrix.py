@@ -9,10 +9,13 @@ Licensed under the GNU General Public License Version 3 (GNU GPL v3),
 
 (C) 2016 - 2017 K4YT3X
 (C) 2017 fa11en
+(C) 2017 Ivens Portugal
 
 """
 import os
 import urllib.request
+import argparse
+import shutil
 
 # Import Controller Packages
 from iptables import iptables
@@ -63,23 +66,52 @@ VERSION = "0.0.1"
 
 # -------------------------------- Functions --------------------------------
 
+def processArguments():
+    """
+    This function parses all arguments
+    """
+    global args
+    parser = argparse.ArgumentParser()
+    control_group = parser.add_argument_group('Controls')
+    control_group.add_argument("--enable", help="Enable DefenseMatrix", action="store_true", default=False)
+    control_group.add_argument("--disable", help="Disable DefenseMatrix", action="store_true", default=False)
+    inst_group = parser.add_argument_group('Installation')
+    inst_group.add_argument("--install", help="Install DefenseMatrix Automatically", action="store_true", default=False)
+    inst_group.add_argument("--uninstall", help="Uninstall DefenseMatrix Automatically", action="store_true", default=False)
+    inst_group.add_argument("--upgrade", help="Check DefenseMatrix & AVALON Framework Updates", action="store_true", default=False)
+    args = parser.parse_args()
+
+
+def setSSHPort(port):
+    SSHD_CONFIG = '/etc/ssh/sshd_config'
+    TEMP = '/tmp/sshd_config'
+    with open(TEMP, 'w') as temp:
+        with open(SSHD_CONFIG, 'r') as sshd:
+            for line in sshd:
+                if line[0:5] != 'Port ':
+                    temp.write(line)
+            temp.write('Port ' + str(port) + '\n')
+    shutil.move(TEMP, SSHD_CONFIG)
+
 
 def installWizard():
     print(avalon.FG.G + avalon.FM.BD + "Welcome to DefenseMatrix!")
     print("This is the setup wizard")
-    print("You will be asked to answer basic questions about your server")
+    print("You will be asked to answer basic questions about your server" + avalon.FM.RST)
 
     serverTypes = [
     "Web Server",
     "Mail Server",
     "Minecraft PC Server",
     ]
+    print(serverTypes[0])
 
-    for index in len(serverTypes):
-        print(index + ". " + serverTypes[index - 1])
+    for index in range(len(serverTypes)):
+        print(index)
+        print(str(index) + ". " + serverTypes[index - 1])
 
     while True:
-        serverSelection = avalon.gets("Which type of server it this?")
+        serverSelection = avalon.gets("Which type of server it this?: ")
         try:
             serverType = serverTypes[int(serverSelection)]
             break
@@ -158,6 +190,9 @@ def installWizard():
             if len(port) != 0:
                 try:
                     port = int(port)
+                    setSSHPort(port)
+                    avalon.info("SSH Port successfully set to " + str(port))
+                    avalon.info("Effective after setup wizard is completed")
                     break
                 except TypeError:
                     avalon.error("Please enter a valid port number between 1-65565!")
@@ -166,5 +201,14 @@ def installWizard():
     else:
         avalon.info("You can always change it using the command \"dm --ssh-port [port]\"")
 
+    avalon.info("")
+
 
 # -------------------------------- Procedural --------------------------------
+
+processArguments()
+
+if os.getuid() != 0:
+    avalon.error("This app requires root privilege to run!")
+
+installWizard()
