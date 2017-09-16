@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """
 Name: K4YT3X
       Fa11en
@@ -15,9 +16,10 @@ Licensed under the GNU General Public License Version 3 (GNU GPL v3),
 import os
 import urllib.request
 import argparse
+import time
 
 # Import Controller Packages
-from iptables import ufw
+import iptables
 from arptables import arptables
 from install import Install
 
@@ -98,20 +100,8 @@ if args.install:
 elif args.uninstall:
     uninstaller = Install()
     uninstaller.uninstall()
-elif args.openport:
-    try:
-        ports = args.openport.split(',')
-        for port in ports:
-            ufw.allow(port)
-    except TypeError:
-        avalon.error("Not a valid port number!")
-elif args.closeport:
-    try:
-        ports = args.closeport.split(',')
-        for port in ports:
-            ufw.expire(port)
-    except TypeError:
-        avalon.error("Not a valid port number!")
-
 else:
-    pass
+    while True:
+        iptables.ufw.generateStatistics()
+        iptables.ufw.adjustStatus()
+        time.sleep(5)

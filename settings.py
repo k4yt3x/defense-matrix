@@ -6,7 +6,7 @@ import os
 
 # filepaths
 CONFPATH = '/etc/DefenseMatrix.conf'
-INSTALLPATH = '/usr/share/defenseMatrix/'
+INSTALLPATH = '/usr/share/DefenseMatrix'
 SSHD_CONFIG = '/etc/ssh/sshd_config'
 
 # configuration variables

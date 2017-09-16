@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 '''
-This is the script that is called to install DefenceMatrix.
+This is the script that is called to install DefenseMatrix.
 Customizability (things to input) to this class are:
     install_location = /absolute/path/
     network manager = [WICD, NetworkManager, BOTH], BOTH is default
@@ -10,10 +10,11 @@ Customizability (things to input) to this class are:
 '''
 import avalon_framework as avalon
 from iptables import ufw
-import inspect
+import passwd
 import os
 import sys
 import settings as st
+import shutil
 
 
 class Install:
@@ -21,8 +22,9 @@ class Install:
         # copy self to installation directory upon initialization
         os.system('mkdir -p %s' % st.INSTALLPATH)
         os.system('cp -r %s/* %s' % (os.getcwd(), st.INSTALLPATH))
-        os.system('ln -s %s/defenceMatrix.py /usr/bin/defencematrix'
-                  % st.INSTALLPATH)
+        if os.path.islink("/usr/bin/DefenseMatrix") or os.path.isfile("/usr/bin/DefenseMatrix"):
+            os.remove("/usr/bin/DefenseMatrix")
+        os.system('ln -s %s/defenseMatrix.py /usr/bin/DefenseMatrix' % st.INSTALLPATH)
 
     def check_install(self):
         return os.path.exists(st.CONFPATH)
@@ -40,6 +42,9 @@ class Install:
         self._install_rkhunt()
         self._install_passwdcmplx()
         self._install_config(ssh_port)
+        self._install_service()
+        self._install_port_controllers()
+        os.system("chmod 755 " + st.INSTALLPATH)
 
         avalon.info("Installation Wizard Completed!")
         avalon.info("Settings will be effective immediately!")
@@ -52,6 +57,7 @@ class Install:
         os.system('arptables -F')
         sys.exit(0)
         exit(0)
+
 
     def _get_inputs(self):
         # welcome and banner
@@ -67,7 +73,7 @@ class Install:
             try:
                 server_type = list(st.server_types.keys())[int(server_select)]
                 break
-            except TypeError:
+            except ValueError:
                 avalon.error("Invalid Input!")
 
         for server in st.server_types.keys():
@@ -86,17 +92,30 @@ class Install:
         if avalon.ask("Do you want to change it now?", True):
             while True:
                 try:
-                    ssh_port = int(avalon.gets("Which port do you want to change to?"))
-                    if int(ssh_port) <= 0:
-                        raise TypeError
+                    ssh_port = avalon.gets("Which port do you want to change to?: ")
+                    if len(ssh_port) == 0:
+                        avalon.error("Please enter a valid port number between 1-65565!")
+                        pass
                     else:
+                        ssh_port = int(ssh_port)
                         break
-                except TypeError:
+                except ValueError:
                     avalon.error("Please enter a valid port number between 1-65565!")
         else:
             avalon.info("You can always change it using the command \"dm --ssh-port [port]\"")
 
         return open_ports, ssh_port
+
+    def _install_port_controllers(self):
+        os.system('ln -s %s/openport.py /usr/bin/openport' % st.INSTALLPATH)
+        os.system("chmod 755 %s/openport.py" % st.INSTALLPATH)
+        os.system('ln -s %s/closeport.py /usr/bin/closeport' % st.INSTALLPATH)
+        os.system("chmod 755 %s/closeport.py" % st.INSTALLPATH)
+
+    def _install_service(self):
+        shutil.copyfile("DefenseMatrix", "/etc/init.d/DefenseMatrix")
+        os.system("chmod 755 /etc/init.d/DefenseMatrix")
+        os.system("update-rc.d DefenseMatrix defaults")
 
     def _install_packages(self):
         cur_packs = [curpack.split()[1] for curpack in
@@ -106,9 +125,9 @@ class Install:
         os.system(st.gen_pack_install(st.package_manager, ' '.join(to_install)))
 
     def _install_iptables(self, open_ports):
-        ufwctrl = ufw()
         for port in open_ports:
             ufw.allow(port)
+            ufw.adjustStatus()
 
     def _install_arptables(self, network_managers='all', remove=False):
         def uninstall():
@@ -117,13 +136,11 @@ class Install:
             return uninstall()
 
         # check arptables installation
-        if not (os.path.isfile('/usr/bin/arptables')
-                or os.path.isfile('/usr/sbin/arptables')):
+        if not (os.path.isfile('/usr/bin/arptables') or os.path.isfile('/usr/sbin/arptables')):
             if os.system(st.gen_pack_install(st.package_manager, 'arptables')):
                 print('Invalid package manager. Unable to proceed. ')
         else:
-            avalon.error('arptables not installed. Unable to proceed. ' +
-                         'Aborting...')
+            avalon.error('arptables not installed. Unable to proceed. Aborting...')
             uninstall()
 
         # retrieve method name and set its respective value in _installed
@@ -133,7 +150,7 @@ class Install:
         pass
 
     def _install_passwdcmplx(self):
-        pass
+        passwd.replaceOriginalPasswd()
 
     def _install_config(self, ssh_port):
         # generate ssh port configuration
@@ -143,4 +160,3 @@ class Install:
         st.write_file('\n'.join(sshd_config), st.SSHD_CONFIG, mode='w')
         avalon.info("SSH Port successfully set to " + str(ssh_port))
         os.system("service ssh restart")
-
