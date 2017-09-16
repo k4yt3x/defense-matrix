@@ -1,10 +1,11 @@
 import inspect
 import os
 import sys
-import avalon as av
+import avalon_framework as av
+import settings as st
 
 class Install:
-	def __init__ (self, install_location):
+	def __init__ (self, install_location='/usr/share/', iface):
 		self.install_location = install_location
 		self._installed = {
 			'iptables': False,
@@ -21,52 +22,52 @@ class Install:
 		self._install_iptables()
 		self._install_arptables()
 		self._install_rkhunt()
-		self._install_tripwrire()
+		self._install_tripwire()
 		self._install_passwdcmplx()
 		self._install_config()
 
 	def uninstall (self):
-
-
-	def _install_iptables (self):
-
-
-	def _install_arptables (self):
-		# check arptables installation
-		if not (os.path.isfile('/usr/bin/arptables')
-				or os.path.isfile('/sbin/arptables')):
-			# alert user
-			print(av.FM.BD + av.FG.R + 'We have detected that you ' +
-				'don\'t have arptables installed!' + av.FM.RST)
-			print('This is required for installation')
-			if av.ask('Install arptables?', True):
-				if os.path.isfile('/usr/bin/apt'):
-					os.system('apt update && apt install arptables -y')
-				elif os.path.isfile('usr/bin/yum'):
-					os.system('yum install arptables -y')
-				elif os.path.isfile('usr/bin/pacman'):
-					os.system('pacman -S arptables --noconfirm')
-				else:
-					av.error('Sorry, we can\'t find a package manager ' +
-						'that we currently support. Aborting... ' +
-						'(apt, yum, pacman are currently supported)')
-					self._abort()
-
-	def _install_rkhunt (self):
-
-
-	def _install_tripwire (self):
-
-	def _install_passwdcmplx (self):
-
-	def _install_config (self):
-
-	def _abort (self):
 		for method in self._installed:
-			if method:
+			if self._installed[method]:
+				exec('self._install_%s.uninstall()' % method)
 
 		sys.exit(0)
 		exit(0)
 
+	def check_install (self):
+		
+
+	def _install_iptables (self):
+		pass
+
+	def _install_arptables (self):
+		def uninstall (self):
+			os.system(st.gen_pack_remove(st.package_manager, 'arptables'))
+
+		# check arptables installation
+		if not (os.path.isfile('/usr/bin/arptables')
+				or os.path.isfile('/usr/sbin/arptables')):
+			if not os.system(st.gen_pack_install(st.package_manager, 'arptables')):
+				print('Invalid package manager. Unable to proceed. ')
+		else:
+			av.error('arptables not installed. Unable to proceed. ' +
+				'Aborting...')
+			self._install_arptables.uninstall()
+
+		# retrieve method name and set its respective value in _installed
+		self._installed[inspect.stack()[0][3].rsplit('_', 1)[-1]] = True
+
+
+	def _install_rkhunt (self):
+		pass
+
+	def _install_tripwire (self):
+		pass
+
+	def _install_passwdcmplx (self):
+		pass
+
+	def _install_config (self):
+		pass
 
 
