@@ -3,7 +3,30 @@
 import os
 import sys
 
-CONFPATH = "/etc/DefenseMatrix.conf"
+CONFPATH = '/etc/DefenseMatrix.conf'
+files = []
+packages = []
+
+
+def write_file (data, filename, mode='wb'):
+    if not os.path.exists(filename):
+        os.system('touch %s' % filename)
+    with open(filename, mode) as fname:
+        fname.writelines(data)
+
+
+def read_file(filename, mode='r'):
+    content = []
+    with open(filename, mode) as fname:
+        for line in fname:
+            content.append(line)
+
+    return content
+
+
+def get_ifaces():
+    return [line.split(':')[0] for line in read_file('/proc/net/dev')
+            if line.split(':')]
 
 
 def get_package_manager(manager):
@@ -41,3 +64,5 @@ valid_managers = {
 }
 
 package_manager = [man for man in valid_managers.keys() if valid_managers[man]][0]
+ifaces = get_ifaces(
+    )
