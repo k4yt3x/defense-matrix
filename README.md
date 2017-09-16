@@ -1,27 +1,48 @@
-# DefenseMatrix
-Full security solution for Linux Servers
+<center>
+<font face="Fira Code">
+
+# Defense MatriX
+
+**Full security solution for Linux Servers**
+
+</font>
+</center>
+</br>
+
+## What is DefenseMatrix?
+DefenseMatrix helps Linux users secure their servers on various of dimentions automatically. It makes securing a Linux server faster and easier.
 
 </br>
 
-## Description:
-DefenseMartix is a Full security resolution for Linux platform to fill in the white space of full Linux defense system
+## It includes:
+ - iptables tcp/udp/icmp firewall
+ - arptables ARP firewall
+ - Rootkit Detection
+ - Password complexity check
+ - Attack analysis and visualization
 
-**It includes:**</br>
-    iptables</br>
-    arptables</br>
-    port management</br>
-    network activity logging</br>
-    other server-side security stuff</br>
+</br>
 
-## Who do we need?
-We need people that have security related experience or people that are good at doing statistics, generating charts with python or people that are good at making front-end information displaying (ex. websites, android apps)
+## Installation
+We make it fast, easy and simple
+~~~~
+$ sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/K4YT3X/DefenseMatrix/quickinstall.sh)"
+~~~~
 
-## Goals
-1. IPTables  //Leon
-2. ARPTables  //Leon
-3. Rootkit Detection / Tripwire //Conrad
-4. Password complexity check  //Ivens
-5. Basic configuration check  //Conrad
-6. Port security (SSH, Entr0)  //Leon + Conrad
-7. Report Generator (Website?)
-8. Settings //Conrad
+</br>
+
+
+## Uninstallation
+We still make it easy for you
+~~~~
+$ sudo DefenseMatrix --uninstall
+~~~~
+
+</br>
+
+## Usage
+~~~~
+$ sudo DefenseMatrix                  # Print Help Page
+$ sudo service DefenseMatrix start    # Start DefenseMatrix service
+$ sudo service DefenseMatrix stop     # Stop DefenseMatrix service
+~~~~
