@@ -167,6 +167,8 @@ def installWizard():
     os.system("iptables -X")
 
     ufwctrl = iptables.ufw()
+    for port in portsOpen:
+        ufwctrl.allow(port)
 
     sshSet = False
     avalon.info("It is " + avalon.FM.BD + "HIGHLY recommended to change your default port for ssh")
