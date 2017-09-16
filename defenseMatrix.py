@@ -15,11 +15,11 @@ Licensed under the GNU General Public License Version 3 (GNU GPL v3),
 import os
 import urllib.request
 import argparse
-import shutil
 
 # Import Controller Packages
-from iptables import iptables
+from iptables import ufw
 from arptables import arptables
+from install import Install
 
 
 try:
@@ -82,148 +82,19 @@ def processArguments():
     args = parser.parse_args()
 
 
-def setSSHPort(port):
-    SSHD_CONFIG = '/etc/ssh/sshd_config'
-    TEMP = '/tmp/sshd_config'
-    with open(TEMP, 'w') as temp:
-        with open(SSHD_CONFIG, 'r') as sshd:
-            for line in sshd:
-                if line[0:5] != 'Port ':
-                    temp.write(line)
-            temp.write('Port ' + str(port) + '\n')
-    shutil.move(TEMP, SSHD_CONFIG)
-
-
-def installWizard():
-    print(avalon.FG.G + avalon.FM.BD + "Welcome to DefenseMatrix!")
-    print("This is the setup wizard")
-    print("You will be asked to answer basic questions about your server" + avalon.FM.RST)
-
-    serverTypes = [
-    "Web Server",
-    "Mail Server",
-    "Minecraft PC Server",
-    ]
-    print(serverTypes[0])
-
-    for index in range(len(serverTypes)):
-        print(index)
-        print(str(index) + ". " + serverTypes[index - 1])
-
-    while True:
-        serverSelection = avalon.gets("Which type of server it this?: ")
-        try:
-            serverType = serverTypes[int(serverSelection)]
-            break
-        except TypeError:
-            avalon.error("Invalid Input!")
-
-    if serverType == "Web Server":
-        portsOpen = [80, 443]
-    elif serverType == "Mail Server":
-        portsOpen = [25, 587, 110]
-    elif serverType == "Minecraft PC Server":
-        portsOpen = [25565]
-
-    ifacesSelected = []
-    while True:
-        print(avalon.FM.BD + '\nWhich interface do you wish to install for?' + avalon.FM.RST)
-        ifaces = []
-        with open('/proc/net/dev', 'r') as dev:
-            for line in dev:
-                try:
-                    if line.split(':')[1]:
-                        ifaces.append(line.split(':')[0])
-                except IndexError:
-                    pass
-        if not len(ifaces) == 0:
-            idx = 0
-            for iface in ifaces:
-                print(str(idx) + '. ' + iface.replace(' ', ''))
-                idx += 1
-        print('99. Manually Enter')
-        selection = avalon.gets('Please select (index number): ')
-
-        try:
-            if selection == '99':
-                manif = avalon.gets('Interface: ')
-                if manif not in ifacesSelected:
-                    ifacesSelected.append(manif)
-                if avalon.ask('Add more interfaces?', False):
-                    pass
-                else:
-                    break
-            elif int(selection) >= len(ifaces):
-                avalon.error('Selected interface doesn\'t exist!')
-            else:
-                ifacesSelected.append(ifaces[int(selection)].replace(' ', ''))
-                if avalon.ask('Add more interfaces?', False):
-                    pass
-                else:
-                    break
-        except ValueError:
-            avalon.error('Invalid Input!')
-            avalon.error('Please enter the index number!')
-
-    avalon.info("DefenseMatrix takes care of your firewall settings for you")
-    avalon.warning("This following step is going to reset your iptables configuration")
-    if not avalon.ask("Is is okay to proceed right now?", True):
-        exit(0)
-
-    ifaceobjs_iptables = []
-    ifaceobjs_arptables = []
-
-    for interface in ifacesSelected:
-        iptablesobj = iptables(interface)
-        ifaceobjs_iptables.append(iptablesobj)
-        arptablesobj = arptables(interface)
-        ifaceobjs_arptables.append(arptablesobj)
-
-    for iface in ifaceobjs_iptables:
-        for port in portsOpen:
-            iface.allow(port)
-
-    avalon.info("It is " + avalon.FM.BD + "HIGHLY recommended to change your default port for ssh")
-    if avalon.ask("Do you want to change it right now?", True):
-        while True:
-            port = avalon.gets("Which port do you want to change to?")
-            if len(port) != 0:
-                try:
-                    port = int(port)
-                    setSSHPort(port)
-                    avalon.info("SSH Port successfully set to " + str(port))
-                    avalon.info("Effective after setup wizard is completed")
-                    break
-                except TypeError:
-                    avalon.error("Please enter a valid port number between 1-65565!")
-            else:
-                avalon.error("Please enter a valid port number between 1-65565!")
-    else:
-        avalon.info("You can always change it using the command \"dm --ssh-port [port]\"")
-
-    avalon.info("")
-
-
-def generateStatistics():
-    iptables_logs = []
-    with open("/var/log/messages", "r") as message:
-        for line in message:
-            if "IPTables-Dropped" in line:
-                iptables_logs.append(line)
-        message.close()
-    stats = []
-    for line in iptables_logs:
-        line = line.split(' ')
-        for section in line:
-            if "SRC" in section:
-                
-
-
 # -------------------------------- Procedural --------------------------------
 
 processArguments()
 
 if os.getuid() != 0:
     avalon.error("This app requires root privilege to run!")
+    exit(0)
 
-installWizard()
+if args.install:
+    installer = Install()
+    installer.install()
+elif args.uninstall:
+    uninstaller = Install()
+    uninstaller.uninstall()
+else:
+    pass

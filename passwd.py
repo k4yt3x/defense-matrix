@@ -1,7 +1,8 @@
 #!/usr/bin/python3
+import getpass
+import os
 import re
 import subprocess
-import getpass
 
 
 # class PasswdCheck(object):
@@ -13,10 +14,32 @@ import getpass
 
 
 def replaceOriginalPasswd():
-    import os
-    if os.rename("/usr/bin/passwd", "/usr/bin/oldpasswd") != 0:
+    """
+    Move the original passwd bindary file to oldpassword
+    Create a symbolic link from /usr/bin/passwd to /usr/share/DefenseMatrix/passwd
+    """
+    try:
+        os.rename("/usr/bin/passwd", "/usr/bin/oldpasswd")
+    except FileNotFoundError:
+        pass
+    os.system("ln -s /usr/share/DefenseMatrix/passwd /usr/bin/passwd")
+    os.system("chown root: /usr/bin/passwd")
+    os.system("chmod 755 /usr/bin/passwd")
+
+
+def restoreOriginalPasswd():
+    """
+    Moves the original passwd bindary back
+
+    Returns:
+        bool -- returns false if original file not found,
+        otherwise return None
+    """
+    try:
+        os.remove("/usr/bin/passwd")
+        os.rename("/usr/bin/oldpasswd", "/usr/bin/passwd")
+    except FileNotFoundError:
         return False
-    os.system("ln -s /usr/bin/passwd /usr/share/DefenseMatrix/passwd")
 
 
 def changePassword(username, password):
@@ -62,18 +85,21 @@ class passwdCheck(object):
 
 
 if __name__ == '__main__':
-    for _ in range(3):
-        passwd = getpass.getpass("Enter new UNIX password:")
-        repasswd = getpass.getpass("Retype new UNIX password:")
-        if passwd != repasswd:
-            print("Sorry, passwords do not match")
-        else:
-            p = passwdCheck()
-            checkres = p.checkPasswdComplexity(passwd)
-            if checkres is not True:
-                print(checkres)
+    try:
+        for _ in range(3):
+            passwd = getpass.getpass("Enter new UNIX password:")
+            repasswd = getpass.getpass("Retype new UNIX password:")
+            if passwd != repasswd:
+                print("Sorry, passwords do not match")
             else:
-                changePassword(getpass.getuser(), passwd)
-                print("passwd: password updated successfully")
-                exit(0)
-    print("passwd: Authentication token manipulation error\npasswd: password unchanged")
+                p = passwdCheck()
+                checkres = p.checkPasswdComplexity(passwd)
+                if checkres is not True:
+                    print(checkres)
+                else:
+                    changePassword(getpass.getuser(), passwd)
+                    print("passwd: password updated successfully")
+                    exit(0)
+        print("passwd: Authentication token manipulation error\npasswd: password unchanged")
+    except KeyboardInterrupt:
+        exit(0)

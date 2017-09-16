@@ -1,0 +1,28 @@
+#!/bin/bash
+
+case "$1" in 
+start)
+   /usr/bin/DefenseMatrix &
+   echo $!>/var/run/DefenseMatrix.pid
+   ;;
+stop)
+   kill `cat /var/run/DefenseMatrix.pid`
+   rm /var/run/DefenseMatrix.pid
+   ;;
+restart)
+   $0 stop
+   $0 start
+   ;;
+status)
+   if [ -e /var/run/DefenseMatrix.pid ]; then
+      echo DefenseMatrix is running, pid=`cat /var/run/DefenseMatrix.pid`
+   else
+      echo DefenseMatrix is NOT running
+      exit 1
+   fi
+   ;;
+*)
+   echo "Usage: $0 {start|stop|status|restart}"
+esac
+
+exit 0 
