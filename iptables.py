@@ -6,7 +6,6 @@ class iptables:
     def __init__(self, interface):
         self.interface = interface
 
-
     def getDefaultRule(self):
         """
         Checks if the default rule of iptables is ACCEPT or DROP
@@ -18,7 +17,6 @@ class iptables:
                 return True
         return False
 
-
     def allow(self, address, port):
         """
         Accept all traffic from one address
@@ -28,7 +26,6 @@ class iptables:
             port {int} -- Port number
         """
         os.system("iptables -A INPUT -i " + self.interface + " -p tcp --source " + address + " --sport " + str(port) + " -j ACCEPT")
-
 
     def expire(self, address):
         """

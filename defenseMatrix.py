@@ -11,9 +11,12 @@ Licensed under the GNU General Public License Version 3 (GNU GPL v3),
 (C) 2017 fa11en
 
 """
-import psutil
 import os
 import urllib.request
+
+# Import Controller Packages
+from iptables import iptables
+from arptables import arptables
 
 
 try:
@@ -55,31 +58,93 @@ except ImportError:
             print('\033[31m\033[1mInvalid Input!\033[0m')
 
 
-VERSION = "0.01"
-
-
-# -------------------------------- Classes --------------------------------
-
-class iptables:
-
-    def __init__(self):
-        pass
-
-
-class arptables:
-
-    def __init__(self):
-        pass
-
-
-class rootkit:
-
-    def __init__(self):
-        pass
+VERSION = "0.0.1"
 
 
 # -------------------------------- Functions --------------------------------
 
+
+def installWizard():
+    print(avalon.FG.G + avalon.FM.BD + "Welcome to DefenseMatrix!")
+    print("This is the setup wizard")
+    print("You will be asked to answer basic questions about your server")
+
+    serverTypes = [
+    "Web Server",
+    "Mail Server",
+    "Minecraft PC Server",
+    ]
+
+    for index in len(serverTypes):
+        print(index + ". " + serverTypes[index - 1])
+
+    while True:
+        serverSelection = avalon.gets("Which type of server it this?")
+        try:
+            serverType = serverTypes[int(serverSelection)]
+            break
+        except TypeError:
+            avalon.error("Invalid Input!")
+
+    if serverType == "Web Server":
+        portsOpen = [22, 80, 443]
+    elif serverType == "Mail Server":
+        portsOpen = [22, 25, 587, 110]
+    elif serverType == "Minecraft PC Server":
+        portsOpen = [22, 25565]
+
+    ifacesSelected = []
+    while True:
+        print(avalon.FM.BD + '\nWhich interface do you wish to install for?' + avalon.FM.RST)
+        ifaces = []
+        with open('/proc/net/dev', 'r') as dev:
+            for line in dev:
+                try:
+                    if line.split(':')[1]:
+                        ifaces.append(line.split(':')[0])
+                except IndexError:
+                    pass
+        if not len(ifaces) == 0:
+            idx = 0
+            for iface in ifaces:
+                print(str(idx) + '. ' + iface.replace(' ', ''))
+                idx += 1
+        print('99. Manually Enter')
+        selection = avalon.gets('Please select (index number): ')
+
+        try:
+            if selection == '99':
+                manif = avalon.gets('Interface: ')
+                if manif not in ifacesSelected:
+                    ifacesSelected.append(manif)
+                if avalon.ask('Add more interfaces?', False):
+                    pass
+                else:
+                    break
+            elif int(selection) >= len(ifaces):
+                avalon.error('Selected interface doesn\'t exist!')
+            else:
+                ifacesSelected.append(ifaces[int(selection)].replace(' ', ''))
+                if avalon.ask('Add more interfaces?', False):
+                    pass
+                else:
+                    break
+        except ValueError:
+            avalon.error('Invalid Input!')
+            avalon.error('Please enter the index number!')
+
+    avalon.info("DefenseMatrix takes care of your firewall settings for you")
+    avalon.warning("This following step is going to reset your iptables configuration")
+    if not avalon.ask("Is is okay to proceed right now?", True):
+        exit(0)
+
+    ifaceobjs = []
+
+    for interface in interfaces:
+        interface = interface_ctrl(interface)
+        ifaceobjs.append(interface)
+
+    for iface in ifaceobje
 
 
 # -------------------------------- Procedural --------------------------------
