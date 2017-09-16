@@ -204,6 +204,21 @@ def installWizard():
     avalon.info("")
 
 
+def generateStatistics():
+    iptables_logs = []
+    with open("/var/log/messages", "r") as message:
+        for line in message:
+            if "IPTables-Dropped" in line:
+                iptables_logs.append(line)
+        message.close()
+    stats = []
+    for line in iptables_logs:
+        line = line.split(' ')
+        for section in line:
+            if "SRC" in section:
+                
+
+
 # -------------------------------- Procedural --------------------------------
 
 processArguments()
