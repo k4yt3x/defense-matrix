@@ -5,7 +5,7 @@ import avalon_framework as av
 import settings as st
 
 class Install:
-	def __init__ (self, install_location='/usr/share/', iface):
+	def __init__(self, install_location='/usr/share/', iface):
 		self.install_location = install_location
 		self._installed = {
 			'iptables': False,
@@ -16,7 +16,7 @@ class Install:
 			'config': False
 			}
 
-	def install (self):
+	def install(self):
 		# run all the required installations
 		# TODO: allow user to choose which parts they want installed
 		self._install_iptables()
@@ -26,7 +26,7 @@ class Install:
 		self._install_passwdcmplx()
 		self._install_config()
 
-	def uninstall (self):
+	def uninstall(self):
 		for method in self._installed:
 			if self._installed[method]:
 				exec('self._install_%s.uninstall()' % method)
@@ -34,13 +34,13 @@ class Install:
 		sys.exit(0)
 		exit(0)
 
-	def check_install (self):
-		
+	def check_install(self):
+		return os.path.exists(st.CONFPATH)
 
-	def _install_iptables (self):
+	def _install_iptables(self):
 		pass
 
-	def _install_arptables (self):
+	def _install_arptables(self):
 		def uninstall (self):
 			os.system(st.gen_pack_remove(st.package_manager, 'arptables'))
 
@@ -58,16 +58,16 @@ class Install:
 		self._installed[inspect.stack()[0][3].rsplit('_', 1)[-1]] = True
 
 
-	def _install_rkhunt (self):
+	def _install_rkhunt(self):
 		pass
 
-	def _install_tripwire (self):
+	def _install_tripwire(self):
 		pass
 
-	def _install_passwdcmplx (self):
+	def _install_passwdcmplx(self):
 		pass
 
-	def _install_config (self):
+	def _install_config(self):
 		pass
 
 
