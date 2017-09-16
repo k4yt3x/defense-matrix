@@ -10,7 +10,8 @@ INSTALLPATH = '/usr/share/defenseMatrix/'
 SSHD_CONFIG = '/etc/ssh/sshd_config'
 
 # configuration variables
-packages = []
+required_packages = ['ufw', 'iptables', 'arptables']
+installed_packages = []
 server_types = {
     "Web Server": [80, 443],
     "Mail Server": [25, 587, 110],

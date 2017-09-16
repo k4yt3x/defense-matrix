@@ -32,6 +32,8 @@ class Install:
         if self.check_install():
             print('DefenseMatrix is already installed.')
             return
+        # check for which packages we need to install
+        self._install_packages()
         open_ports, ssh_port = self._get_inputs()
         self._install_iptables(open_ports + [ssh_port])
         self._install_arptables()
@@ -46,6 +48,8 @@ class Install:
     # crated files, and remove them.
     # (i.e. anything at st.CONFPATH, st.INSTALLPATH, and the st.packages list)
     def uninstall(self):
+        os.system('iptables -F')
+        os.system('arptables -F')
         sys.exit(0)
         exit(0)
 
@@ -93,6 +97,13 @@ class Install:
             avalon.info("You can always change it using the command \"dm --ssh-port [port]\"")
 
         return open_ports, ssh_port
+
+    def _install_packages(self):
+        cur_packs = [curpack.split()[1] for curpack in
+                     os.popen('dpkg -l').read().split('\n') if len(curpack.split()) > 1]
+
+        to_install = [pack for pack in st.required_packages if pack not in cur_packs]
+        os.system(st.gen_pack_install(st.package_manager, ' '.join(to_install)))
 
     def _install_iptables(self, open_ports):
         ufwctrl = ufw()
