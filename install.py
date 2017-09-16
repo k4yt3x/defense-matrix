@@ -126,9 +126,8 @@ class Install:
 
     def _install_config(self, ssh_port):
         # generate ssh port configuration
-        sshd_config = [line for line in st.read_file(st.SSHD_CONFIG)
+        sshd_config = [line.strip() for line in st.read_file(st.SSHD_CONFIG)
                        if line[0:5] != 'Port ']
-        print(sshd_config)
         sshd_config.append('Port %s\n' % str(ssh_port))
         st.write_file('\n'.join(sshd_config), st.SSHD_CONFIG, mode='w')
         avalon.info("SSH Port successfully set to " + str(ssh_port))
