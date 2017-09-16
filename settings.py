@@ -3,14 +3,16 @@
 import os
 import sys
 
+CONFPATH = "/etc/DefenseMatrix.conf"
 
-def get_package_manager (manager):
+
+def get_package_manager(manager):
 	if os.path.isfile('/usr/bin/%s' % manager.strip()):
 		return True
 	return False
 
 
-def gen_pack_install (manager, packs):
+def gen_pack_install(manager, packs):
 	if manager not in valid_managers.keys():
 		return False
 	if manager == 'apt':
@@ -21,7 +23,7 @@ def gen_pack_install (manager, packs):
 		return 'pacman -S %s --noconfirm' % packs
 
 
-def gen_pack_remove (manager, packs):
+def gen_pack_remove(manager, packs):
 	if manager not in valid_managers.keys():
 		return False
 	if manager == 'apt':
