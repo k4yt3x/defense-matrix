@@ -30,7 +30,7 @@ class tiger:
             output += c.decode()
         for line in output.split('\n'):
             if "Security report is in" in line:
-                return line.split("\'")[1].split("\'")[0]
+                return line.split("'")[1].split("'")[0]
 
 
 def audit():

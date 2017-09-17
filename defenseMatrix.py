@@ -43,20 +43,18 @@ import securityAudit
 from install import Install
 
 
-try:
-    import avalon_framework as avalon
-except ImportError:
+def installPackage(package):
     while True:
         install = input('\033[31m\033[1mAVALON Framework not installed! Install now? [Y/n] \033[0m')
         if len(install) == 0 or install[0].upper() == 'Y':
             try:
                 if os.path.isfile('/usr/bin/pip3'):
                     print('Installing using method 1')
-                    os.system('pip3 install avalon_framework')
+                    os.system('pip3 install ' + package)
                 elif os.path.isfile('/usr/bin/wget'):
                     print('Installing using method 2')
                     os.system('wget -O - https://bootstrap.pypa.io/get-pip.py | python3')
-                    os.system('pip3 install avalon_framework')
+                    os.system('pip3 install ' + package)
                 else:
                     print('Installing using method 3')
                     # import urllib.request
@@ -65,7 +63,7 @@ except ImportError:
                         getpip.write(content.read().decode())
                         getpip.close()
                     os.system('python3 /tmp/get-pip.py')
-                    os.system('pip3 install avalon_framework')
+                    os.system('pip3 install ' + package)
                     os.remove('/tmp/get-pip.py')
             except Exception as e:
                 print('\033[31mInstallation failed!: ' + str(e))
@@ -75,11 +73,22 @@ except ImportError:
             print('\033[32mPlease restart the program\033[0m')
             exit(0)
         elif install[0].upper() == 'N':
-            print('\033[31m\033[1mSCUTUMM requires avalon framework to run!\033[0m')
+            print('\033[31m\033[1mUnable to run program without dependencies!\033[0m')
             print('\033[33mAborting..\033[0m')
             exit(0)
         else:
             print('\033[31m\033[1mInvalid Input!\033[0m')
+
+
+try:
+    import avalon_framework as avalon
+except ImportError:
+    installPackage("avalon_framework")
+
+try:
+    from prettytable import PrettyTable
+except ImportError:
+    installPackage("prettytable")
 
 
 VERSION = "0.0.1"
