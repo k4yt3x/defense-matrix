@@ -39,7 +39,6 @@ import time
 
 # Import Controller Packages
 import iptables
-import securityAudit
 from install import Install
 
 
@@ -86,6 +85,7 @@ except ImportError:
     installPackage("avalon_framework")
 
 try:
+    import securityAudit
     from prettytable import PrettyTable
 except ImportError:
     installPackage("prettytable")
