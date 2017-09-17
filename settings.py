@@ -12,11 +12,6 @@ SSHD_CONFIG = '/etc/ssh/sshd_config'
 # configuration variables
 required_packages = ['ufw', 'iptables', 'arptables']
 installed_packages = []
-server_types = {
-    "Web Server": [80, 443],
-    "Mail Server": [25, 587, 110],
-    "Minecraft PC Server": [25565]
-}
 
 
 def write_file(data, filename, mode='wb'):
