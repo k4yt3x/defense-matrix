@@ -55,7 +55,7 @@ class Install:
         self.sequencePrint(spaces + "88  88  88 88ooo88    88    88oobY'    88     `8bd8'")
         self.sequencePrint(spaces + "88  88  88 88~~~88    88    88`8b      88     .dPYb.")
         self.sequencePrint(spaces + "88  88  88 88   88    88    88 `88.   .88.   .8P  Y8.")
-        self.sequencePrint(spaces + "YP  YP  YP YP   YP    YP    88   YD Y888888P YP    YP")
+        self.sequencePrint(spaces + "YP  YP  YP YP   YP    YP    88   YD Y888888P YP    YP\n")
 
     def install(self):
         # check if we're already installed
