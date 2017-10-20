@@ -11,11 +11,11 @@ Customizability (things to input) to this class are:
 from __future__ import print_function
 import avalon_framework as avalon
 from iptables import ufw
-import passwd
 import os
-import sys
+import passwd
 import settings as st
 import shutil
+import sys
 
 
 class Install:

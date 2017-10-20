@@ -9,6 +9,20 @@
 </center>
 </br>
 
+#### Current Version: 0.9 alpha
+
+Recent Changes:
++ Deciding to continue this project and add SCUTUM
++ Other decisions about this project is being made
+
+
+</br>
+
+## SCUTUM is to be added into DefenseMatrix Project
+After consideration, SCUTUM, as a nice firewall controller, is to be added into DefenseMatrix. It will soon replace the iptables controller and arptables controller in DefenseMatrix. Expect lots of improvements.
+
+</br>
+
 ## What is DefenseMatrix?
 DefenseMatrix helps individuals and organizations who use Linux to secure their servers on various dimentions automatically. It makes securing a Linux server faster and easier.
 
