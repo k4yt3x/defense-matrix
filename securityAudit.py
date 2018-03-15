@@ -1,4 +1,5 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from prettytable import PrettyTable
 import subprocess
 import sys
@@ -9,7 +10,6 @@ def generateReport(reportFile):
     rf = ""
     with open(reportFile, "r") as reportf:
         for line in reportf:
-
             rf += line
     rfinal = rf.replace("\n         ", "")
     for line in rfinal.split("\n"):

@@ -1,4 +1,15 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Password Checker
+
+Dev: Ivens Portugal
+Date Created: September 16, 2017
+Last Modified: September 18, 2017
+
+Dev: K4YT3X
+Last Modified: March 15, 2018
+"""
 import getpass
 import os
 import re
@@ -51,7 +62,7 @@ def changePassword(username, password):
 class passwdCheck(object):
 
     min_num_chars = 8
-    max_num_chars = 20
+    max_num_chars = 100
 
     SMALL_PW = "Your password should contain at least " + str(min_num_chars) + " characters."
     LARGE_PW = "Your password should contain at most " + str(max_num_chars) + " characters."
@@ -101,5 +112,6 @@ if __name__ == '__main__':
                     print("passwd: password updated successfully")
                     exit(0)
         print("passwd: Authentication token manipulation error\npasswd: password unchanged")
+        exit(1)
     except KeyboardInterrupt:
         exit(0)

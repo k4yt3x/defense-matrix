@@ -2,6 +2,8 @@
 <font face="Fira Code">
 
 # Defense MatriX
+# !!! This Version is Untested !!!
+Do not download yet.
 
 **Full security solution for Linux Servers**
 
@@ -12,7 +14,7 @@
 ### Project Initialized During HackTheNorth
 
 
-#### Current Version: 0.9 alpha
+#### Current Version: 1.0 alpha
 
 Recent Changes:
 + Deciding to continue this project and add SCUTUM
