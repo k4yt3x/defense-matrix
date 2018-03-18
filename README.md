@@ -1,5 +1,5 @@
-[![Join the chat at https://gitter.im/K4YT3X-DEV/SCUTUM](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/K4YT3X-DEV/SCUTUM?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![status](https://travis-ci.org/K4YT3X/SCUTUM.svg)](https://travis-ci.org/K4YT3X/SCUTUM)
+[![Join the chat at https://gitter.im/K4YT3X-DEV/DefenseMatrix](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/K4YT3X-DEV/DefenseMatrix?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![status](https://travis-ci.org/K4YT3X/DefenseMatrix.svg)](https://travis-ci.org/K4YT3X/DefenseMatrix)
 # DefenseMatrix
 
 ## This is an alpha version. Please look at "Updates" section for more information before installation.
@@ -82,13 +82,46 @@ $ sudo DefenseMatrix --uninstall
 </br>
 
 ## Usage
-**OUTDATED**  
-This is how you get started with DefenseMatrix
+ALL commands require root privilege  
+### Firewall Controls
+Firewall is controlled by [SCUTUM Firewall](https://github.com/K4YT3X/SCUTUM).  
+For more details visit [SCUTUM Help Page](https://github.com/K4YT3X/SCUTUM/blob/master/README.md)
 ~~~~
-$ sudo DefenseMatrix                  # Print Help Page
-$ sudo service DefenseMatrix start    # Start DefenseMatrix service
-$ sudo service DefenseMatrix stop     # Stop DefenseMatrix service
+$ sudo openport [port1] [port2] [port3]      # Open tcp ports
+$ sudo closeport [port1] [port2] [port3]     # Close tcp ports
+$ sudo service scutum start     # Start scutum service
+$ sudo service scutum stop      # Stop scutum service
+$ sudo systemctl enable scutum  # Start SCUTUM with system
+$ sudo systemctl disable scutum # Don't start SCUTUM with system
+$ sudo scutum                   # Start SCUTUM Normally
+$ sudo scutum --start           # Start SCUTUM Manually for once even it it's disabled
+$ sudo scutum --enable          # Enable SCUTUM (Start automatically on connect)
+$ sudo scutum --disable         # Disable SCUTUM (Don't start automatically on connect)
+$ sudo scutum --reset           # Reset SCUTUM (Allow ALL ARP packages temporarily)
+$ sudo scutum --purgelog        # Purge SCUTUM logs
+$ sudo scutum --install         # Run scutum installation wizard and install SCUTUM into system
+$ sudo scutum --uninstall       # Remove SCUTUM from system completely 
+$ sudo scutum --upgrade         # Upgrade SCUTUM and AVALON Framework
 ~~~~
+
+### Security Audit
+~~~~
+$ sudo DefenseMatrix --audit    # Run rootkit check and generate report
+~~~~
+
+### Password Complexity Check
+Integrated into `passwd` command.  
+After installation, `passwd` command will check new password complexity automatically.  
+~~~~
+$ passwd
+~~~~
+
+**TODO**  
+To restore the original passwd binary file:
+~~~~
+$ sudo passwd --restore
+~~~~
+
 
 </br>
 
