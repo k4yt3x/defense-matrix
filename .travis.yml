@@ -4,7 +4,7 @@ language: python
 python:
   - "3.6"
 
-install: "pip install avalon_framework prettytable"
+install: "pip install avalon_framework"
 
 script:
-    - python3 defenseMatrix.py --help
+    - python3 defenseMatrix.py --version
