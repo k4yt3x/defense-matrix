@@ -104,10 +104,14 @@ $ sudo scutum --uninstall       # Remove SCUTUM from system completely
 $ sudo scutum --upgrade         # Upgrade SCUTUM and AVALON Framework
 ~~~~
 
+</br>
+
 ### Security Audit
 ~~~~
 $ sudo DefenseMatrix --audit    # Run rootkit check and generate report
 ~~~~
+
+</br>
 
 ### Password Complexity Check
 Integrated into `passwd` command.  
