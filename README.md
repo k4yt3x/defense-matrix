@@ -1,4 +1,33 @@
+[![Join the chat at https://gitter.im/K4YT3X-DEV/SCUTUM](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/K4YT3X-DEV/SCUTUM?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![status](https://travis-ci.org/K4YT3X/SCUTUM.svg)](https://travis-ci.org/K4YT3X/SCUTUM)
 # DefenseMatrix
+
+## This is an alpha version. Please look at "Updates" section for more information before installation.
+
+#### Current Version: 1.0 alpha
+**Project Initialized During HackTheNorth**
+
+</br>
+
+## Quick Install
+### Prerequisites
+* Designed for Linux OS
+* `curl` or `wget` is required for quick install
+* `git` should be installed
+
+**Detailed dependency list can be found in [DEPENDENCIES.md](https://github.com/K4YT3X/DefenseMatrix/blob/master/DEPENDENCIES.md)**
+
+**via curl**
+~~~~
+$ sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/K4YT3X/DefenseMatrix/master/quickinstall.sh)"
+~~~~
+
+**via wget**
+~~~~
+$ sudo sh -c "$(wget https://raw.githubusercontent.com/K4YT3X/DefenseMatrix/master/quickinstall.sh -O -)"
+~~~~
+
+<br>
 
 ## Updates (March 18, 2018):
 + Tested on Kali VM
@@ -7,23 +36,20 @@
   + Scheduled security audit?
 + Added Dependency list
 
+<br>
 
-**Full security solution for Linux Servers**
+#### Current Version Changes
++ Added detailed file information for every file
++ Added Shebangs for every executable
 
-### Project Initialized During HackTheNorth
-
-
-#### Current Version: 1.0 alpha
-
-Recent Changes:
+#### Recent Changes:
 + Deciding to continue this project and add SCUTUM
 + Other decisions about this project is being made
 
-
 </br>
 
-## SCUTUM is to be added into DefenseMatrix Project
-After consideration, SCUTUM, as a nice firewall controller, is to be added into DefenseMatrix. It will soon replace the iptables controller and arptables controller in DefenseMatrix. Expect lots of improvements.
+## Why do you need DefenseMatrix?
+During HTN we made a test. Our nameless linux server which is exposed to the internet received roughly 6000 attacks and port scanning attempts every 24 hours. 
 
 </br>
 
@@ -34,28 +60,15 @@ Never before have a program been able to have so many security features packed i
 
 </br>
 
-## Why do we need to secure Linux?
-Did you know that an ordinary server receives almost 6000 attacks per day? With our help, these attacks don't come in.
-
-
-</br>
-
 ## DefenseMatrix features:
- - iptables tcp/udp/icmp firewall
- - arptables ARP firewall
+ - TCP/UDP/ICMP firewall
+ - ARP firewall
  - Rootkit Detection
  - Password complexity check
  - Attack analysis and visualization
 
-We configure these things automatically for you.
-
-</br>
-
-## Installation
-We make it fast, easy, and simple
-~~~~
-$ sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/K4YT3X/DefenseMatrix/master/quickinstall.sh)"
-~~~~
+These basic security features will defend your server(s) against most tech based attacks.  
+We configure these things automatically for you.  
 
 </br>
 
@@ -69,9 +82,16 @@ $ sudo DefenseMatrix --uninstall
 </br>
 
 ## Usage
+**OUTDATED**  
 This is how you get started with DefenseMatrix
 ~~~~
 $ sudo DefenseMatrix                  # Print Help Page
 $ sudo service DefenseMatrix start    # Start DefenseMatrix service
 $ sudo service DefenseMatrix stop     # Stop DefenseMatrix service
 ~~~~
+
+</br>
+
+## What if I want to be more secure?
+
+If you still feel unsafe after installing this security suite, we recommend you to look into IDSs and WAFs. [Snort](https://www.snort.org/) will be a good one to begin with.
