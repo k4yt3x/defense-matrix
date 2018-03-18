@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Dev: fa11en
+Date Created: September 16, 2017
+Last Modified: September 18, 2017
+
+Dev: K4YT3X
+Last Modified: March 18, 2018
+
 This is the script that is called to install DefenseMatrix.
 Customizability (things to input) to this class are:
     install_location = /absolute/path/
@@ -64,7 +71,6 @@ class Install:
         # check for which packages we need to install
         self.printIcon()
         self._install_passwdcmplx()
-        self._install_service()
         self._install_tigher()
         self._install_scutum()
         os.system("chmod -R 755 " + st.INSTALLPATH)

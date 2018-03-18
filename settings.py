@@ -1,5 +1,15 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+settings controller
 
+Dev: fa11en
+Date Created: September 16, 2017
+Last Modified: September 18, 2017
+
+Dev: K4YT3X
+Last Modified: March 18, 2018
+"""
 import os
 
 # ------global variables------
@@ -70,5 +80,4 @@ valid_managers = {
 }
 
 package_manager = [man for man in valid_managers.keys() if valid_managers[man]][0]
-ifaces = get_ifaces(
-    )
+ifaces = get_ifaces()

@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 
@@ -56,8 +56,6 @@ def processArguments():
     control_group = parser.add_argument_group('Controls')
     control_group.add_argument("--enable", help="Enable DefenseMatrix", action="store_true", default=False)
     control_group.add_argument("--disable", help="Disable DefenseMatrix", action="store_true", default=False)
-    control_group.add_argument("--openport", help="Open a TCP port", action="store", default=False)
-    control_group.add_argument("--closeport", help="Close a TCP port", action="store", default=False)
     control_group.add_argument("--audit", help="Run system security audit", action="store_true", default=False)
     inst_group = parser.add_argument_group('Installation')
     inst_group.add_argument("--install", help="Install DefenseMatrix Automatically", action="store_true", default=False)

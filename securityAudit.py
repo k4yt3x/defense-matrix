@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+security audit & report generator
+
+Dev: K4YT3X
+Date Created: September 16, 2017
+Last Modified: March 18, 2017
+"""
 from prettytable import PrettyTable
 import subprocess
 import sys
