@@ -22,7 +22,7 @@ YP  YP  YP YP   YP    YP    88   YD Y888888P YP    YP
 Name: K4YT3X
       Fa11en
 Date Created: September 16, 2017
-Last Modified: March 15, 2018
+Last Modified: March 18, 2018
 
 Licensed under the GNU General Public License Version 3 (GNU GPL v3),
     available at: https://www.gnu.org/licenses/gpl-3.0.txt
@@ -61,6 +61,8 @@ def processArguments():
     inst_group.add_argument("--install", help="Install DefenseMatrix Automatically", action="store_true", default=False)
     inst_group.add_argument("--uninstall", help="Uninstall DefenseMatrix Automatically", action="store_true", default=False)
     inst_group.add_argument("--upgrade", help="Check DefenseMatrix & AVALON Framework Updates", action="store_true", default=False)
+    etc = parser.add_argument_group('Extra')
+    etc.add_argument("--version", help="Show DefenseMatrix version and exit", action="store_true", default=False)
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
         sys.exit(1)
@@ -70,6 +72,15 @@ def processArguments():
 # -------------------------------- Procedural --------------------------------
 
 args = processArguments()
+
+if args.version:  # prints program legal / dev / version info
+    print("Current Version: " + VERSION)
+    print("Author: K4YT3X")
+    print("License: GNU GPL v3")
+    print("Github Page: https://github.com/K4YT3X/DefenseMatrix")
+    print("Contact: k4yt3x@protonmail.com")
+    print()
+    exit(0)
 
 if os.getuid() != 0:
     avalon.error("This app requires root privilege to run!")
