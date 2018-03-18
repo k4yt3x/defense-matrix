@@ -1,15 +1,14 @@
-<center>
-<font face="Fira Code">
+# DefenseMatrix
 
-# Defense MatriX
-# !!! This Version is Untested !!!
-Do not download yet.
+## Updates (March 18, 2018):
++ Tested on Kali VM
++ Some minor improvements needed
+  + (Maybe) get rid of config file since it's now useless
+  + Scheduled security audit?
++ Added Dependency list
+
 
 **Full security solution for Linux Servers**
-
-</font>
-</center>
-</br>
 
 ### Project Initialized During HackTheNorth
 
