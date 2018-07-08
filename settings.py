@@ -8,7 +8,7 @@ Date Created: September 16, 2017
 Last Modified: September 18, 2017
 
 Dev: K4YT3X
-Last Modified: March 18, 2018
+Last Modified: April 18, 2018
 """
 import os
 
@@ -26,7 +26,7 @@ installed_packages = []
 
 def write_file(data, filename, mode='wb'):
     if not os.path.exists(filename):
-        os.system('touch %s' % filename)
+        os.system('touch {}'.format(filename))
     with open(filename, mode) as fname:
         fname.writelines(data)
 
@@ -46,7 +46,7 @@ def get_ifaces():
 
 
 def get_package_manager(manager):
-    if os.path.isfile('/usr/bin/%s' % manager.strip()):
+    if os.path.isfile('/usr/bin/{}'.format(manager.strip())):
         return True
     return False
 
@@ -55,22 +55,22 @@ def gen_pack_install(manager, packs):
     if manager not in valid_managers.keys():
         return False
     if manager == 'apt':
-        return 'apt install %s -y' % packs
+        return 'apt install {} -y'.format(packs)
     elif manager == 'yum':
-        return 'yum install %s -y' % packs
+        return 'yum install {} -y'.format(packs)
     elif manager == 'pacman':
-        return 'pacman -S %s --noconfirm' % packs
+        return 'pacman -S {} --noconfirm'.format(packs)
 
 
 def gen_pack_remove(manager, packs):
     if manager not in valid_managers.keys():
         return False
     if manager == 'apt':
-        return 'apt autoremove %s -y' % packs
+        return 'apt autoremove {} -y'.format(packs)
     elif manager == 'yum':
-        return 'yum remove %s -y' % packs
+        return 'yum remove {} -y'.format(packs)
     elif manager == 'pacman':
-        return 'pacman -R %s --noconfirm' % packs
+        return 'pacman -R {} --noconfirm'.format(packs)
 
 
 valid_managers = {
