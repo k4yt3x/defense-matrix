@@ -64,14 +64,10 @@ class Install:
         self.sequencePrint(spaces + "YP  YP  YP YP   YP    YP    88   YD Y888888P YP    YP\n")
 
     def install(self):
-        # check if we're already installed
-        # if self.check_install():
-        #    print('DefenseMatrix is already installed.')
-        #    return
-        # check for which packages we need to install
         self.printIcon()
         self._install_passwdcmplx()
         self._install_tigher()
+        self._install_arptables()
         self._install_scutum()
         os.system("chmod -R 755 " + st.INSTALLPATH)
 
@@ -81,14 +77,18 @@ class Install:
         os.system("systemctl start DefenseMatrix")
 
     def uninstall(self):
-        os.system('iptables -F')
-        os.system('arptables -F')
+        os.system('iptables -F')  # Flush iptables settings
+        os.system('arptables -F')  # Flush arptables settings
         sys.exit(0)
         exit(0)
 
     def _install_tigher(self):
         if not os.path.isfile("/usr/sbin/tiger"):
             os.system(st.gen_pack_install(st.package_manager, "tiger"))
+
+    def _install_arptables(self):
+        if os.system("which arptables"):
+            os.system(st.gen_pack_install(st.package_manager, "arptables"))
 
     def _install_service(self):
         """
