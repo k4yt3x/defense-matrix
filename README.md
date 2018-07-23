@@ -2,7 +2,7 @@
 [![status](https://travis-ci.org/K4YT3X/DefenseMatrix.svg)](https://travis-ci.org/K4YT3X/DefenseMatrix)
 # DefenseMatrix
 
-## This is an alpha version. Please look at "Updates" section for more information before installation.
+## There will be a lot of major changes made in the near future. There has been multiple issues found in the current version. Please wait patiently for the next version
 
 #### Current Version: 1.0 alpha
 **Project Initialized During HackTheNorth**
