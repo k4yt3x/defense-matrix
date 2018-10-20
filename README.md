@@ -1,6 +1,7 @@
 [![Join the chat at https://gitter.im/K4YT3X-DEV/DefenseMatrix](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/K4YT3X-DEV/DefenseMatrix?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![status](https://travis-ci.org/K4YT3X/DefenseMatrix.svg)](https://travis-ci.org/K4YT3X/DefenseMatrix)
-# DefenseMatrix
+
+# Defense Matrix
 
 ## 1.1.0 (October 20, 2018)
 
@@ -30,15 +31,15 @@ $ sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/K4YT3X/defense-matr
 $ sudo sh -c "$(wget https://raw.githubusercontent.com/K4YT3X/DefenseMatrix/master/quickinstall.sh -O -)"
 ```
 
-## Why do you need Defense Matrix?
-
-During HTN we made a test. Our nameless linux server which is exposed to the internet received roughly 6000 attacks and port scanning attempts every 24 hours. 
-
 ## What is Defense Matrix?
 
 DefenseMatrix helps individuals and organizations who use Linux to secure their servers on various dimensions automatically. It makes securing a Linux server faster and easier.
 
 Never before have a program been able to have so many security features packed in one. Therefore we provide you with this all-in-one solution that will make the following difficult things easier to handle.
+
+## Why do you need Defense Matrix?
+
+During HTN we made a test. Our nameless linux server which is exposed to the internet received roughly 6000 attacks and port scanning attempts every 24 hours. 
 
 ## Defense Matrix features:
 
