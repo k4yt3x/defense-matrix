@@ -2,91 +2,83 @@
 [![status](https://travis-ci.org/K4YT3X/DefenseMatrix.svg)](https://travis-ci.org/K4YT3X/DefenseMatrix)
 # DefenseMatrix
 
-## There will be a lot of major changes made in the near future. There has been multiple issues found in the current version. Please wait patiently for the next version
+## 1.1.0 (October 20, 2018)
 
-#### Current Version: 1.0 alpha
-**Project Initialized During HackTheNorth**
-
-</br>
+- Rearranged executable files.
+- Removed everything that's redundant.
+- All tests passed. We are not expecting major bugs.
+- Integration with SCUTUM firewall fixed.
+- Unified code style (`'` and `"`, function and variable naming scheme)
 
 ## Quick Install
+
 ### Prerequisites
+
 * Designed for Linux OS
 * `curl` or `wget` is required for quick install
 * `git` should be installed
 
-**Detailed dependency list can be found in [DEPENDENCIES.md](https://github.com/K4YT3X/DefenseMatrix/blob/master/DEPENDENCIES.md)**
+**Detailed dependency list can be found in [DEPENDENCIES.md](https://github.com/K4YT3X/defense-matrix/blob/master/DEPENDENCIES.md)**
 
 **via curl**
-~~~~
-$ sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/K4YT3X/DefenseMatrix/master/quickinstall.sh)"
-~~~~
+```
+$ sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/K4YT3X/defense-matrix/master/quickinstall.sh)"
+```
 
 **via wget**
-~~~~
+```
 $ sudo sh -c "$(wget https://raw.githubusercontent.com/K4YT3X/DefenseMatrix/master/quickinstall.sh -O -)"
-~~~~
+```
 
-<br>
+## Why do you need Defense Matrix?
 
-## Updates (March 18, 2018):
-+ Tested on Kali VM
-+ Some minor improvements needed
-  + (Maybe) get rid of config file since it's now useless
-  + Scheduled security audit?
-+ Added Dependency list
-
-<br>
-
-#### Current Version Changes
-+ Added detailed file information for every file
-+ Added Shebangs for every executable
-
-#### Recent Changes:
-+ Deciding to continue this project and add SCUTUM
-+ Other decisions about this project is being made
-
-</br>
-
-## Why do you need DefenseMatrix?
 During HTN we made a test. Our nameless linux server which is exposed to the internet received roughly 6000 attacks and port scanning attempts every 24 hours. 
 
-</br>
+## What is Defense Matrix?
 
-## What is DefenseMatrix?
-DefenseMatrix helps individuals and organizations who use Linux to secure their servers on various dimentions automatically. It makes securing a Linux server faster and easier.
+DefenseMatrix helps individuals and organizations who use Linux to secure their servers on various dimensions automatically. It makes securing a Linux server faster and easier.
 
 Never before have a program been able to have so many security features packed in one. Therefore we provide you with this all-in-one solution that will make the following difficult things easier to handle.
 
-</br>
+## Defense Matrix features:
 
-## DefenseMatrix features:
- - TCP/UDP/ICMP firewall
+### `scutum`
+
+ - TCP/UDP/ICMP firewall 
  - ARP firewall
+
+### `tiger` & `rkhunter`
+
  - Rootkit Detection
+ - Configuration sanity check
+
+### Other
+
  - Password complexity check
+
+### TODO
+
  - Attack analysis and visualization
 
 These basic security features will defend your server(s) against most tech based attacks.  
 We configure these things automatically for you.  
 
-</br>
-
-
 ## Uninstallation
-We still make it easy for you
-~~~~
-$ sudo DefenseMatrix --uninstall
-~~~~
 
-</br>
+We make this easy for you.e
 
-## Usage
-ALL commands require root privilege  
+```
+$ sudo defense-matrix --uninstall
+```
+
+## Usages
+
+**ALL commands require root privilege.**
+
 ### Firewall Controls
-Firewall is controlled by [SCUTUM Firewall](https://github.com/K4YT3X/SCUTUM).  
-For more details visit [SCUTUM Help Page](https://github.com/K4YT3X/SCUTUM/blob/master/README.md)
-~~~~
+
+Firewall is controlled by [SCUTUM Firewall](https://github.com/K4YT3X/scutum). For more details please visit [SCUTUM Help Page](https://github.com/K4YT3X/scutum/blob/master/README.md)
+```
 $ sudo openport [port1] [port2] [port3]      # Open tcp ports
 $ sudo closeport [port1] [port2] [port3]     # Close tcp ports
 $ sudo service scutum start     # Start scutum service
@@ -102,32 +94,25 @@ $ sudo scutum --purgelog        # Purge SCUTUM logs
 $ sudo scutum --install         # Run scutum installation wizard and install SCUTUM into system
 $ sudo scutum --uninstall       # Remove SCUTUM from system completely 
 $ sudo scutum --upgrade         # Upgrade SCUTUM and AVALON Framework
-~~~~
-
-</br>
+```
 
 ### Security Audit
-~~~~
-$ sudo DefenseMatrix --audit    # Run rootkit check and generate report
-~~~~
 
-</br>
+Defense Matrix installs a number of security auditing tools for you, and more could be added later. To save you time executing those commands separately, we condense everything in to one command which will execute them all.
+
+```
+$ sudo defense-matrix --audit
+```
 
 ### Password Complexity Check
-Integrated into `passwd` command.  
-After installation, `passwd` command will check new password complexity automatically.  
-~~~~
-$ passwd
-~~~~
+
+The default `passwd` binary will be replaced by our enhanced `passwd` command, and the old binary file will be backed up at `/usr/bin/oldpasswd`. When you change the password using `passwd` after installing Defense Matrix, it will require password with higher complexity.
 
 **TODO**  
 To restore the original passwd binary file:
-~~~~
+```
 $ sudo passwd --restore
-~~~~
-
-
-</br>
+```
 
 ## What if I want to be more secure?
 
