@@ -1,7 +1,7 @@
 # Dependencies
 Date Created: March 18, 2018  
 Last Modified: March 18, 2018  
-This list is **UP TO DATE**  
+This list is **OUTDATED**  
 
 Note that some of these dependencies will be prompted for installation since they are mandatory for this program to function normally.
 
