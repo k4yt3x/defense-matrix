@@ -8,4 +8,4 @@ install:
   - "pip install avalon_framework prettytable"
 
 script:
-  - python3 defenseMatrix.py --version
+  - python3 bin/defense-matrix.py --version
