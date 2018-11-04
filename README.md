@@ -1,5 +1,5 @@
 [![Join the chat at https://gitter.im/K4YT3X-DEV/DefenseMatrix](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/K4YT3X-DEV/DefenseMatrix?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![status](https://travis-ci.org/K4YT3X/DefenseMatrix.svg)](https://travis-ci.org/K4YT3X/DefenseMatrix)
+[![status](https://travis-ci.org/K4YT3X/defense-matrix.svg)](https://travis-ci.org/K4YT3X/DefenseMatrix)
 
 # Defense Matrix
 
@@ -23,12 +23,12 @@
 
 **via curl**
 ```
-$ sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/K4YT3X/defense-matrix/master/quickinstall.sh)"
+$ sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/K4YT3X/defense-matrix/master/bin/defense-matrix.py)"
 ```
 
 **via wget**
 ```
-$ sudo sh -c "$(wget https://raw.githubusercontent.com/K4YT3X/DefenseMatrix/master/quickinstall.sh -O -)"
+$ sudo sh -c "$(wget https://raw.githubusercontent.com/K4YT3X/defense-matrix/master/bin/defense-matrix.py -O -)"
 ```
 
 ## What is Defense Matrix?
