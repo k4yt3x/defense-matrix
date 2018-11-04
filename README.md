@@ -3,6 +3,18 @@
 
 # Defense Matrix
 
+## Warning: `passwd` Binary Bug
+
+The current method that defense matrix is using to enforce higher password strength seems defective. Therefore we have temporarily disabled the replacement of default system `passwd` binary.
+
+If you wish to recover your default `passwd` binary file, please execute the following command to move the original binary back to its place.
+
+```bash
+$ sudo mv /usr/bin/oldpasswd /usr/bin/passwd
+```
+
+In the future, we'll be using a more stable, robust and secure way to implement this feature.
+
 ## 1.1.0 (October 20, 2018)
 
 - Rearranged executable files.
