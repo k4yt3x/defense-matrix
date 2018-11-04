@@ -13,10 +13,10 @@ This is the script that is called to install defense-matrix.
 from avalon_framework import Avalon
 from utilities import Utilities
 import os
-import passwd
+# import passwd
 import shutil
 
-VERSION = '1.0.0'
+VERSION = '1.0.1'
 
 
 class Install:
@@ -42,10 +42,22 @@ class Install:
         components.
         """
 
+        # A list of packages to be installed
+        # by system package manager
+        self.pm_installation_list = []
+
         self._install_defense_matrix()
-        self._install_passwdcmplx()
+        # self._install_passwdcmplx()
+
+        # Packages to be installed by pm
         self._install_tigher()
         self._install_rkhunter()
+
+        # Commit installation
+        Utilities.install_packages(self.pm_installation_list)
+
+        # Install SCUTUM separately since it's not a
+        # standard package
         self._install_scutum()
 
         Avalon.info('Installation Wizard Completed!')
@@ -61,7 +73,7 @@ class Install:
             return
 
         # Restore original passwd binary
-        passwd.restore_original_passwd()
+        # passwd.restore_original_passwd()
 
         # Remove SCUTUM
         Utilities.execute(['scutum', '--uninstall'])
@@ -109,7 +121,7 @@ class Install:
             os.remove(self.executable)  # Remove old file or symbolic links
 
         # Link current defense-matrix.py to path
-        Utilities.execute(['ln', '-s', '{}/bin/defense-matrix.py'.format(self.current_dir), self.executable])
+        os.symlink('{}/bin/defense-matrix.py'.format(self.current_dir), self.executable)
 
     def _install_tigher(self):
         """ Install tiger
@@ -118,7 +130,8 @@ class Install:
         an HIDS, which hardens the system from the binary aspect.
         """
         if not shutil.which('tiger'):
-            Utilities.install_package('tiger')
+            if Avalon.ask('tiget not installed. Install?', True):
+                self.pm_installation_list.append('tiger')
 
     def _install_rkhunter(self):
         """ Install rkhunter
@@ -127,7 +140,8 @@ class Install:
         on system binary files and system misconfigurations.
         """
         if not shutil.which('rkhunter'):
-            Utilities.install_package('rkhunter')
+            if Avalon.ask('rkhunter not installed. Install?', True):
+                self.pm_installation_list.append('rkhunter')
 
     def _install_passwdcmplx(self):
         """ Install passwd
