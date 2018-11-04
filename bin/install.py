@@ -16,7 +16,7 @@ import os
 # import passwd
 import shutil
 
-VERSION = '1.0.1'
+VERSION = '1.0.2'
 
 
 class Install:
@@ -102,21 +102,22 @@ class Install:
         if user_install_dir != '':
             self.install_dir = user_install_dir
 
-        # If files already at the correct directory, return
+        # If files already at the correct directory, pass
         if self.current_dir == self.install_dir:
-            return
+            pass
 
         # Check if destination directory occupied
-        if os.path.isdir(self.install_dir) or os.path.islink(self.install_dir):
-            if not Avalon.ask('Target directory exists. Overwrite?', True):
-                Avalon.warning('Aborting installation: target directory not writable')
-            if os.path.isdir(self.install_dir):
-                shutil.rmtree(self.install_dir)
-            else:
-                os.remove(self.install_dir)
+        else:
+            if os.path.isdir(self.install_dir) or os.path.islink(self.install_dir):
+                if not Avalon.ask('Target directory exists. Overwrite?', True):
+                    Avalon.warning('Aborting installation: target directory not writable')
+                if os.path.isdir(self.install_dir):
+                    shutil.rmtree(self.install_dir)
+                else:
+                    os.remove(self.install_dir)
 
-        # Copy defense matrix to destination directory
-        shutil.copytree(self.current_dir, self.install_dir)
+            # Copy defense matrix to destination directory
+            shutil.copytree(self.current_dir, self.install_dir)
 
         # If defense-matrix is already linked to path, remove it
         if os.path.islink(self.executable) or os.path.isfile(self.executable):
