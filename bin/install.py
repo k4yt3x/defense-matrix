@@ -54,14 +54,16 @@ class Install:
         self._install_rkhunter()
 
         # Commit installation
-        Utilities.install_packages(self.pm_installation_list)
+        if len(self.pm_installation_list) > 0:
+            Utilities.install_packages(self.pm_installation_list)
 
         # Install SCUTUM separately since it's not a
         # standard package
         self._install_scutum()
 
-        Avalon.info('Installation Wizard Completed!')
-        Avalon.info('Settings will be effective immediately!')
+        print('\n' + Avalon.FM.BD, end='')
+        Avalon.info('Defense Matrix installation completed')
+        Avalon.info('You can now control it via the \"defense-matrix\" command')
 
     def uninstall(self):
         """ Uninstall everything this system has deployed
