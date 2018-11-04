@@ -133,7 +133,7 @@ class Install:
         an HIDS, which hardens the system from the binary aspect.
         """
         if not shutil.which('tiger'):
-            if Avalon.ask('tiget not installed. Install?', True):
+            if Avalon.ask('tiger not installed. Install?', True):
                 self.pm_installation_list.append('tiger')
 
     def _install_rkhunter(self):
