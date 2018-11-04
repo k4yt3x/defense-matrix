@@ -23,12 +23,12 @@
 
 **via curl**
 ```
-$ sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/K4YT3X/defense-matrix/master/bin/defense-matrix.py)"
+$ sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/K4YT3X/defense-matrix/master/quickinstall.sh)"
 ```
 
 **via wget**
 ```
-$ sudo sh -c "$(wget https://raw.githubusercontent.com/K4YT3X/defense-matrix/master/bin/defense-matrix.py -O -)"
+$ sudo sh -c "$(wget https://raw.githubusercontent.com/K4YT3X/defense-matrix/master/quickinstall.sh -O -)"
 ```
 
 ## What is Defense Matrix?
