@@ -14,7 +14,7 @@ import shutil
 import subprocess
 import sys
 
-VERSION = '1.0.2'
+VERSION = '1.0.4'
 
 
 class Utilities:
@@ -35,21 +35,26 @@ class Utilities:
 
     def install_packages(packages):
         """ Install a package using system package manager
+
+        This method is currently using os.system instead of
+        subprocess.run or subprocess.Popen because subprocess
+        doesn't seem to handle some of the TUIs well.
         """
         Avalon.warning('If the installation is unsuccessful, you should consider updating the package manager cache', log=False)
-        if Avalon.ask('Install {}?'.format(' '.join(packages)), True):
-            if shutil.which('apt-get'):
-                os.system('apt-get install {} -y'.format(' '.join(packages)))
-                return True
-            elif shutil.which('yum'):
-                os.system('yum install {} -y'.format(' '.join(packages)))
-                return True
-            elif shutil.which('pacman'):
-                os.system('pacman -S {} --noconfirm'.format(' '.join(packages)))
-                return True
-            else:
-                Avalon.error('Sorry, we can\'t find a package manager that we currently support. Aborting..')
-                Avalon.error('Currently Supported: apt, yum, pacman')
-                return False
+
+        # Convert packages list into a string
+        if len(packages) > 1:
+            packages_string = ' '.join(packages)
         else:
+            packages_string = packages[0]
+
+        if shutil.which('apt-get'):
+            return os.system('apt-get install {} -y'.format(packages_string))
+        elif shutil.which('yum'):
+            return os.system('yum install {} -y'.format(packages_string))
+        elif shutil.which('pacman'):
+            return os.system('pacman -S {} --noconfirm'.format(packages_string))
+        else:
+            Avalon.error('Sorry, we can\'t find a package manager that we currently support. Aborting..')
+            Avalon.error('Currently Supported: apt, yum, pacman')
             return False
